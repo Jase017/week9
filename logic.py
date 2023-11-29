@@ -1,4 +1,5 @@
 # logic.py
+
 import random
 
 
@@ -16,7 +17,10 @@ class Board:
                 return self.board[i][0]
             if self.board[0][i] is not None and self.board[0][i] == self.board[1][i] == self.board[2][i]:
                 return self.board[0][i]
-        if self.board[1][1] is not None and (self.board[0][0] == self.board[1][1] == self.board[2][2] or self.board[2][0] == self.board[1][1] == self.board[0][2]):
+        if (
+            self.board[1][1] is not None
+            and (self.board[0][0] == self.board[1][1] == self.board[2][2] or self.board[2][0] == self.board[1][1] == self.board[0][2])
+        ):
             return self.board[1][1]
         return None
 
@@ -28,15 +32,18 @@ class Board:
 
 
 class Player:
-    def __init__(self, symbol, move=None):
+    def __init__(self, symbol, move=None, player_type='Human'):
         self.symbol = symbol
         self.move = move
+        self.steps = 0  # Initialize the steps counter
+        self.player_type = player_type  # Human or Bot
 
     def make_move(self, board):
         if self.move:
             x, y = self.move
             if board[x][y] is not None:
                 raise ValueError('Invalid move: this position is already occupied.')
+            self.steps += 1  # Increment steps counter
             return x, y
         else:
             while True:
@@ -46,6 +53,7 @@ class Player:
                 try:
                     x, y = map(int, move.split())
                     if 0 <= x <= 2 and 0 <= y <= 2 and board[x][y] is None:
+                        self.steps += 1  # Increment steps counter
                         return x, y
                     else:
                         print('Invalid input, please try again.')
@@ -54,8 +62,12 @@ class Player:
 
 
 class Bot(Player):
+    def __init__(self, symbol, player_type='Bot'):
+        super().__init__(symbol, player_type=player_type)
+
     def make_move(self, board):
         while True:
             x, y = random.randint(0, 2), random.randint(0, 2)
             if board[x][y] is None:
+                self.steps += 1  # Increment steps counter
                 return x, y

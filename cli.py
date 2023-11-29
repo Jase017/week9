@@ -48,22 +48,17 @@ class Game:
         game_id = datetime.now().strftime("%Y%m%d%H%M%S")
         timestamp = datetime.now()
         start_time = timestamp
-        duration = 0
+        
 
         with open('logs/game_data.csv', mode='a', newline='') as file:
             writer = csv.writer(file)
 
             # Write header if the file is empty
             if os.path.getsize('logs/game_data.csv') == 0:
-                writer.writerow(['Game_ID', 'Timestamp', 'Winner'])
+                writer.writerow(['Game_ID', 'Timestamp', 'Winner', 'Player1_Steps', 'Player1_Type', 'Player2_Steps', 'Player2_Type'])
 
-            end_time = datetime.now()
-            duration = (end_time - start_time).seconds
-
-            #player_X_type = "Human" if self.mode == "two" or (self.mode == "single" and self.current_player == "X") else "Bot"
-            #player_O_type = "Human" if self.mode == "two" or (self.mode == "single" and self.current_player == "O") else "Bot"
-
-            writer.writerow([game_id, timestamp, self.board.get_winner()])
+            writer.writerow([game_id, timestamp, self.board.get_winner(), self.player1.steps, self.player1.player_type,
+                             self.player2.steps, self.player2.player_type])
 
 
 if __name__ == '__main__':
